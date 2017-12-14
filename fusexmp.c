@@ -55,11 +55,11 @@ static struct {
 
 static int xmp_getattr(const char *path, struct stat *stbuf)
 {
-    char fullpaths[2][PATH_MAX] = {0,};
+    char fullpaths[2][PATH_MAX] = {0};
   	int res1 = 0;
     int res2 = 0;
-    struct stat stbuf1 = {0,};
-    struct stat stbuf2 = {0,};
+    struct stat stbuf1 = {0};
+    struct stat stbuf2 = {0};
 
     sprintf(fullpaths[0],"%s%s",global_context.driveA,path);
     sprintf(fullpaths[1],"%s%s",global_context.driveB,path);
@@ -73,6 +73,7 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 
 	if (res1 == -1 || res2 == -1)
 		return -errno;
+    
   if(S_ISREG(stbuf1.st_mode))
     stbuf1.st_size += stbuf2.st_size;
     
@@ -422,8 +423,10 @@ while(1)
 
     if (res2 == -1)
       return -errno;
+      
     else if(res2 == 0)
       break;
+
     memcpy(buf+r_bytes,buf2,res2);
     r_bytes += res2; 
 
@@ -661,8 +664,8 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  strcpy(global_context.driveA, argv[--argc]);
   strcpy(global_context.driveB, argv[--argc]);
+  strcpy(global_context.driveA, argv[--argc]);
 
   srand(time(NULL));
 
