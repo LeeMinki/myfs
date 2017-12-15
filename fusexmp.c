@@ -287,18 +287,17 @@ static int xmp_rename(const char *from, const char *to)
 
 static int xmp_link(const char *from, const char *to)
 {
-  char read_fullpath[PATH_MAX];
+  char read_fullpath[2][PATH_MAX];
   char write_fullpaths[2][PATH_MAX];
   int res;
 
-  sprintf(read_fullpath, "%s%s",
-      rand() % 2 == 0 ? global_context.driveA : global_context.driveB, from);
-
+  sprintf(read_fullpath[0], "%s%s", global_context.driveA, from);
+  sprintf(read_fullpath[1], "%s%s", global_context.driveB, from);
   sprintf(write_fullpaths[0], "%s%s", global_context.driveA, to);
   sprintf(write_fullpaths[1], "%s%s", global_context.driveB, to);
 
   for (int i = 0; i < 2; ++i) {
-    res = link(read_fullpath, write_fullpaths[i]);
+    res = link(read_fullpath[i], write_fullpaths[i]);
     if (res == -1)
       return -errno;
   }
